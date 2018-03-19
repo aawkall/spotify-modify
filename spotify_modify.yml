@@ -1,0 +1,18 @@
+# spotify_modify.yml
+
+version: "3"
+services:
+
+  tyk:
+    network_mode: bridge
+    hostname: tyk
+    image: spotify_modify_tyk
+    ports:
+      - "8199:8080"
+    links:
+      - redis
+
+  redis:
+    network_mode: bridge
+    hostname: redis
+    image: redis

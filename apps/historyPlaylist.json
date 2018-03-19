@@ -1,0 +1,34 @@
+{
+    "name": "History Playlist",
+    "slug": "history-playlist",
+    "api_id": "1",
+    "active": true,
+    "use_keyless": true,
+    "version_data": {
+        "not_versioned": true,
+        "versions": {
+            "Default": {
+                "name": "Default",
+                "use_extended_paths": true,
+                "extended_paths": {
+                    "virtual": [
+                        {
+                            "response_function_name": "createHistoryPlaylist",
+                            "function_source_type": "file",
+                            "function_source_uri": "middleware/historyPlaylist.js",
+                            "path": "/historyplaylist",
+                            "method": "POST",
+                            "use_session": false
+                        }
+                    ]
+                }
+            }
+        }
+    },
+    "proxy": {
+        "preserve_host_header": false,
+        "listen_path": "/historyplaylist",
+        "target_url": "http://httpbin.org",
+        "strip_listen_path": false
+    }
+}
