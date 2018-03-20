@@ -1,6 +1,6 @@
 {
-    "name": "History Playlist",
-    "slug": "history-playlist",
+    "name": "Recently Played List",
+    "slug": "recently-played-list",
     "api_id": "1",
     "active": true,
     "use_keyless": true,
@@ -13,10 +13,10 @@
                 "extended_paths": {
                     "virtual": [
                         {
-                            "response_function_name": "createHistoryPlaylist",
+                            "response_function_name": "createRecentlyPlayedList",
                             "function_source_type": "file",
-                            "function_source_uri": "middleware/historyPlaylist.js",
-                            "path": "/historyplaylist",
+                            "function_source_uri": "middleware/recentlyPlayedList.js",
+                            "path": "/recentlyplayedlist",
                             "method": "POST",
                             "use_session": false
                         }
@@ -27,7 +27,7 @@
     },
     "proxy": {
         "preserve_host_header": false,
-        "listen_path": "/historyplaylist",
+        "listen_path": "/recentlyplayedlist",
         "target_url": "http://httpbin.org",
         "strip_listen_path": false
     }
