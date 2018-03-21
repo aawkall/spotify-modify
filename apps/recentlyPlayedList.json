@@ -30,5 +30,8 @@
         "listen_path": "/recentlyplayedlist",
         "target_url": "http://httpbin.org",
         "strip_listen_path": false
-    }
+    },
+	"config_data": {
+		"spotifyBaseApi": "https://api.spotify.com/v1"
+	}
 }
