@@ -1,0 +1,24 @@
+// requests.partial.mustache
+function response(body, headers, code, session) {
+	var responseObject = {
+		Body: body,
+		Headers: headers,
+		Code: code
+	};
+	return TykJsResponse(responseObject, session.meta_data);
+}
+
+function singleBatchRequest(method, body, accessToken, url) {
+	var requestObject = {
+		"requests": [
+			{
+				"method": method,
+				"body": body,
+				"headers": { "Authorization": "Bearer " + accessToken },
+				"relative_url": url
+			}
+		],
+		"suppress_parallel_execution": true
+	};
+	return JSON.parse(TykBatchRequest(JSON.stringify(requestObject)))[0];
+}

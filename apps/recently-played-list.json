@@ -15,7 +15,7 @@
                         {
                             "response_function_name": "createRecentlyPlayedList",
                             "function_source_type": "file",
-                            "function_source_uri": "middleware/recentlyPlayedList.js",
+                            "function_source_uri": "middleware/recently-played-list.js",
                             "path": "/recentlyplayedlist",
                             "method": "POST",
                             "use_session": false

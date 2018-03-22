@@ -1,0 +1,30 @@
+{
+	"name": "spotify-modify",
+	"version": "0.1.0",
+	"description": "A simple tool to create Spotify playlists from recently played, existing playlists, and setlists",
+	"main": "index.js",
+	"devDependencies": {
+		"fs": "*",
+		"path": "*",
+		"mkdirp": "*",
+		"mustache": "*",
+		"jshint": "*",
+		"mocha": "*",
+		"chai": "*"
+	},
+	"scripts": {
+		"clean": "rm -r build/ || true",
+		"build": "node mustache-build-includes.js",
+		"lint": "jshint build/middleware",
+		"test": "mocha test/",
+		"prebuild": "npm run clean",
+		"prelint": "npm run build",
+		"pretest": "npm run lint"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/aawkall/spotify-modify"
+	},
+	"author": "Aaron Loveall",
+	"license": "MIT"
+}

@@ -1,12 +1,11 @@
-# spotify_modify.yml
-
+# spotify-modify.yml
 version: "3"
 services:
 
   tyk:
     network_mode: bridge
     hostname: tyk
-    image: spotify_modify_tyk
+    image: spotify-modify-tyk
     ports:
       - "8199:8080"
     links:
