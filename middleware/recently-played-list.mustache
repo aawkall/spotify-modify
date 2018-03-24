@@ -8,21 +8,24 @@ function createRecentlyPlayedList(request, session, config) {
 	var spotifyBaseApi = config.config_data.spotifyBaseApi;
 
 	// Get playlist settings from request body
-	/*
-		{
-			"history_length": 50,
-			"playlist_name": "PlaylistName",
-			"access_token": "sampletoken"
-		}
-	*/
 	var requestBody = JSON.parse(request.Body);
-	var historyLength = (requestBody.hasOwnProperty("history_length")) ? requestBody.history_length : defaultHistoryLength;
-	var playlistName = (requestBody.hasOwnProperty("playlist_name")) ? requestBody.playlist_name : defaultPlaylistName + historyLength;
+	var historyLength = defaultHistoryLength;
+	if (requestBody.hasOwnProperty("history_length") && requestBody.history_length !== "") {
+		let requestLength = parseInt(requestBody.history_length, 10);
+		if (requestLength < 1 || requestLength > 50 ) {
+			log("POST /recentlyplayedlist: invalid history_length provided; returning 400 Bad Request");
+			return buildResponse("history_length must be between 1 and 50 inclusive", {}, 400, session);
+		}
+		historyLength = requestLength;
+	}
+
+	var playlistName = (requestBody.hasOwnProperty("playlist_name") && requestBody.playlist_name !== "") ?
+		requestBody.playlist_name : defaultPlaylistName + historyLength;
 	log("CreateRecentlyPlayedList: Length: " + historyLength + ", Playlist Name: " + playlistName);
 
 	// Fail if access_token not given in request body
-	if (!requestBody.hasOwnProperty("access_token")) {
-		log("POST /recentlyplayedlist: access_token not provided, returning 400 Bad Request");
+	if (!requestBody.hasOwnProperty("access_token") || requestBody.access_token === "") {
+		log("POST /recentlyplayedlist: access_token not provided or is empty, returning 400 Bad Request");
 		return buildResponse("Spotify access_token for the current user is required", {}, 400, session);
 	}
 	var accessToken = requestBody.access_token;
@@ -42,6 +45,9 @@ function createRecentlyPlayedList(request, session, config) {
 		log("GET via Spotify /me/player/recently-played failed:\n" + getRecentlyPlayedResponse.body);
 		return processAndBuildResponse(getRecentlyPlayedResponse, session);
 	}
+
+	// TODO: handle if the body.items is empty, or if items doesn't match the length requested
+	// - add tests for these if you implement them
 
 	// Build list of track URIs to add
 	var userId = JSON.parse(getUserIdResponse.body).id;
