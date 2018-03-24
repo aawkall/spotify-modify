@@ -1,0 +1,25 @@
+// Setup mocked / redirected functions for Tyk methods
+var request = require("sync-request");
+
+function log(message) {
+	console.log("      " + message);
+}
+
+function TykJsResponse(responseObject, metaData) {
+	return responseObject;
+}
+
+function TykBatchRequest(requestObject) {
+	var batchRequest = JSON.parse(requestObject).requests[0];
+
+	// Make synchronous http call and return response
+	var response = request(batchRequest.method, batchRequest.relative_url, {
+		headers: batchRequest.headers,
+		body: batchRequest.body
+	});
+	return JSON.stringify([{"code": response.statusCode, "body": response.body.toString("utf8")}]);
+}
+
+{{>recently-played-list}}
+
+module.exports.createRecentlyPlayedList = createRecentlyPlayedList;

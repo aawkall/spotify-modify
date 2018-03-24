@@ -1,11 +1,19 @@
 // requests.partial.mustache
-function response(body, headers, code, session) {
+function buildResponse(body, headers, code, session) {
 	var responseObject = {
 		Body: body,
 		Headers: headers,
 		Code: code
 	};
 	return TykJsResponse(responseObject, session.meta_data);
+}
+
+function processAndBuildResponse(response, session) {
+	if (response.code === 401) {
+		return buildResponse("Error in spotify-modify: access_token was rejected by Spotify", {}, 401, session);
+	} else {
+		return buildResponse("Error in spotify-modify: " + response.body, {}, 500, session);
+	}
 }
 
 function singleBatchRequest(method, body, accessToken, url) {

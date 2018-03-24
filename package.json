@@ -4,18 +4,21 @@
 	"description": "A simple tool to create Spotify playlists from recently played, existing playlists, and setlists",
 	"main": "index.js",
 	"devDependencies": {
+		"commander": "*",
 		"fs": "*",
 		"path": "*",
 		"mkdirp": "*",
 		"mustache": "*",
 		"jshint": "*",
 		"mocha": "*",
-		"chai": "*"
+		"chai": "*",
+		"proxyquire": "*",
+		"sync-request": "*"
 	},
 	"scripts": {
 		"clean": "rm -r build/ || true",
-		"build": "node mustache-build-includes.js",
-		"lint": "jshint build/middleware",
+		"build": "node mustache-build-includes.js --test-compile",
+		"lint": "jshint . --exclude node_modules/",
 		"test": "mocha test/",
 		"prebuild": "npm run clean",
 		"prelint": "npm run build",
