@@ -25,7 +25,7 @@ function createRecentlyPlayedList(request, session, config) {
 
 	// Fail if access_token not given in request body
 	if (!requestBody.hasOwnProperty("access_token") || requestBody.access_token === "") {
-		log("POST /recentlyplayedlist: access_token not provided or is empty, returning 400 Bad Request");
+		log("POST /recentlyplayedlist: access_token not provided or is empty; returning 400 Bad Request");
 		return buildResponse("Spotify access_token for the current user is required", {}, 400, session);
 	}
 	var accessToken = requestBody.access_token;
@@ -35,7 +35,7 @@ function createRecentlyPlayedList(request, session, config) {
 		spotifyBaseApi + "/me");
 	if (getUserIdResponse.code !== 200) {
 		log("GET via Spotify /me failed:\n" + getUserIdResponse.body);
-		return processAndBuildResponse(getUserIdResponse, session);
+		return processAndBuildResponse(getUserIdResponse, session, "GET via Spotify /me failed");
 	}
 
 	// Get list of recently played songs, with given history_length
@@ -43,15 +43,20 @@ function createRecentlyPlayedList(request, session, config) {
 		spotifyBaseApi + "/me/player/recently-played?limit=" + historyLength);
 	if (getRecentlyPlayedResponse.code !== 200) {
 		log("GET via Spotify /me/player/recently-played failed:\n" + getRecentlyPlayedResponse.body);
-		return processAndBuildResponse(getRecentlyPlayedResponse, session);
+		return processAndBuildResponse(getRecentlyPlayedResponse, session, "GET via Spotify /me/player/recently-played failed");
 	}
 
-	// TODO: handle if the body.items is empty, or if items doesn't match the length requested
-	// - add tests for these if you implement them
-
-	// Build list of track URIs to add
+	// Fail if items list is empty or length does not match requested length
 	var userId = JSON.parse(getUserIdResponse.body).id;
 	var recentlyPlayed = JSON.parse(getRecentlyPlayedResponse.body).items;
+	if (recentlyPlayed.length !== historyLength) {
+		var error = "GET via Spotify /me/player/recently-played failed: length of returned list did not match requested length";
+		log(error);
+		log("Requested length: " + historyLength + ", Returned length: " + recentlyPlayed.length);
+		return buildResponse(error, {}, 500, session);
+	}
+
+	// Build list of track URIs to add
 	var uriList = [];
 	for (var i = 0; i < recentlyPlayed.length; i++) {
 		uriList.push(recentlyPlayed[i].track.uri);
@@ -69,7 +74,7 @@ function createRecentlyPlayedList(request, session, config) {
 		spotifyBaseApi + "/users/" + userId + "/playlists");
 	if (createPlaylistResponse.code !== 201) {
 		log("POST via Spotify /users/{userId}/playlists failed:\n" + createPlaylistResponse.body);
-		return processAndBuildResponse(createPlaylistResponse, session);
+		return processAndBuildResponse(createPlaylistResponse, session, "POST via Spotify /users/{userId}/playlists failed");
 	}
 
 	// Get playlist link to return and id for adding songs
@@ -82,7 +87,7 @@ function createRecentlyPlayedList(request, session, config) {
 		spotifyBaseApi + "/users/" + userId + "/playlists/" + playlistId + "/tracks");
 	if (addTracksResponse.code !== 201) {
 		log("POST via Spotify /users/{userId}/playlists/{playlistId}/tracks failed:\n" + addTracksResponse.body);
-		return processAndBuildResponse(addTracksResponse, session);
+		return processAndBuildResponse(addTracksResponse, session, "POST via Spotify /users/{userId}/playlists/{playlistId}/tracks failed");
 	}
 
 	// Return back JSON body with url to new playlist
@@ -90,5 +95,5 @@ function createRecentlyPlayedList(request, session, config) {
 		"playlist_url": playlistUrl
 	};
 	log("POST /recentlyplayedlist: CreateRecentlyPlayedList finished, sending response");
-	return buildResponse(JSON.stringify(responseBody), {}, 200, session);
+	return buildResponse(JSON.stringify(responseBody), {}, 201, session);
 }
