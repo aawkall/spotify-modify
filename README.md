@@ -113,14 +113,13 @@ with the payload in the format of
 | history_length | Length of playlist that will be created, 1 or greater and no greater than 50. Defaults to 25  |
 | playlist_name | Name of playlist to be created. Defaults to "RecentlyPlayedList_$history_length" |
 | access_token | Access token received from the Spotify API after authenticating with a valid user. Must have **user-read-recently-played** and **playlist-modify-private** scopes. See [Spotify Authorization Guide](https://beta.developer.spotify.com/documentation/general/guides/authorization-guide/) |
+
 Note - history_length and playlist_name are optional and have defaults, but access_token is required or spotify-modify will not be authorized to create playlists against a user account (and won't be pointing to any user account either).
 Spotify-modify also assumes that the Tyk endpoint is running in a secure backend with the access token generated separately and passed in; there is no preprocessing on the playlist name provided, or generation of the authentication token itself via username/password
 
 ### Todos
- - Add additional endpoints:
- -- Add artist's top tracks
- -- Add tracks pulled from an artists past setlists via Setlist.fm
- -- Add tracks for a set of artists, gathered from the user's playlists, followed playlists, and recently played tracks
+ - Endpoint: Create playlist with artist's top tracks
+ - Endpoint: Create playlist with tracks pulled from an artists past setlists via Setlist.fm
  - Add simple front end that can authenticate and generate the access token
  - Add E2E tests that extend the current unit tests and test against the live Spotify API on new commits
 
