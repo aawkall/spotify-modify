@@ -14,7 +14,7 @@ describe('recently-played-list', function() {
 
 	describe('createRecentlyPlayedList() -- failure cases', function() {
 
-		it('should return status code 400 when access_token is not provided or empty', function() {
+		it('should return status code 400 when access_token is not provided', function() {
 
 			// Import recently-played-list.js via proxyquire, to enable request overrides
 			var recentlyPlayedList = proxyquire("../build/test/middleware/recently-played-list.js", {
@@ -27,8 +27,17 @@ describe('recently-played-list', function() {
 				testUtils.buildRequest(undefined, undefined, undefined), session, config);
 			expect(recentlyPlayedListResponse.Code).to.equal(400);
 			expect(recentlyPlayedListResponse.Body).to.contain("access_token for the current user is required");
+		});
 
-			// Create playlist with empty access_token; verify response code is also 400
+		it('should return status code 400 when access_token is empty', function() {
+
+			// Import recently-played-list.js via proxyquire, to enable request overrides
+			var recentlyPlayedList = proxyquire("../build/test/middleware/recently-played-list.js", {
+				// No request mocks
+				"sync-request": {}
+			});
+
+			// Create playlist with empty access_token; verify response code is 400
 			recentlyPlayedListResponse = recentlyPlayedList.createRecentlyPlayedList(
 				testUtils.buildRequest(undefined, undefined, ""), session, config);
 			expect(recentlyPlayedListResponse.Code).to.equal(400);
