@@ -108,6 +108,8 @@ with the payload in the format of
     "access_token": "BQfTAzaMWqCUkUSW4L3fJyd5cJvRn5Re1SCLkIy"
 }
 ```
+| parameter | description |
+| ------ | ------ |
 | history_length | Length of playlist that will be created, 1 or greater and no greater than 50. Defaults to 25  |
 | playlist_name | Name of playlist to be created. Defaults to "RecentlyPlayedList_$history_length" |
 | access_token | Access token received from the Spotify API after authenticating with a valid user. Must have **user-read-recently-played** and **playlist-modify-private** scopes. See [Spotify Authorization Guide](https://beta.developer.spotify.com/documentation/general/guides/authorization-guide/) |
