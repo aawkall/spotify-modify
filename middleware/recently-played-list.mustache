@@ -11,7 +11,7 @@ function createRecentlyPlayedList(request, session, config) {
 	var requestBody = JSON.parse(request.Body);
 	var historyLength = defaultHistoryLength;
 	if (requestBody.hasOwnProperty("history_length") && requestBody.history_length !== "") {
-		let requestLength = parseInt(requestBody.history_length, 10);
+		var requestLength = parseInt(requestBody.history_length, 10);
 		if (requestLength < 1 || requestLength > 50 ) {
 			log("POST /recentlyplayedlist: invalid history_length provided; returning 400 Bad Request");
 			return buildResponse("history_length must be between 1 and 50 inclusive", {}, 400, session);
