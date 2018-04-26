@@ -1,5 +1,7 @@
 # spotify-modify
 
+![alt text](https://travis-ci.org/aawkall/spotify-modify.svg?branch=master "spotify-modify Travis CI Results")
+
 A simple interface to fetch track history and create Spotify playlists, using Tyk virtual endpoints and the Spotify Web API.
 - Tyk virtual endpoint to accept playlist requests and handle multiple API calls to Spotify
 - node.js and mustache.js to render Tyk JavaScript files to enable includes, override Tyk methods for unit testing
